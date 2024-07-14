@@ -14,11 +14,15 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.benaka.jetpack.presentation.Dimen
+import com.benaka.jetpack.presentation.common.BlankButton
+import com.benaka.jetpack.presentation.common.GhostButton
 import com.benaka.jetpack.presentation.common.PageIndicator
 import com.benaka.jetpack.presentation.onboarding.components.OnBoardingPage
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -57,6 +61,27 @@ fun OnBoardingScreen() {
                 pageSize = pages.size,
                 selectedPage = rememberPagerState.currentPage
             )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val coroutineScope = rememberCoroutineScope()
+                if (buttonState.value[0].isNotEmpty()) {
+                    BlankButton(name = buttonState.value[0], onClick = {
+                        coroutineScope.launch {
+                            rememberPagerState.animateScrollToPage(page = rememberPagerState.currentPage - 1)
+                        }
+                    })
+                }
+
+                GhostButton(name = buttonState.value[1], onClick = {
+                    coroutineScope.launch {
+                        if (rememberPagerState.currentPage == 3) {
+                            //TODO TO Home screen
+                        } else {
+                            rememberPagerState.animateScrollToPage(page = rememberPagerState.currentPage + 1)
+                        }
+                    }
+                })
+            }
         }
 
 
